@@ -8,3 +8,5 @@ files {
 }
 
 data_file 'MP_STATS_DISPLAY_LIST_FILE' 'stats.xml'
+
+dependency 'es_extended'
