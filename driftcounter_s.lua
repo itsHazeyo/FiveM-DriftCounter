@@ -1,6 +1,9 @@
-local UseGlobalScore = GetConvar("DriftC_useGlobalScore", "true") -- Allow user to have the same score as the one they had on another server
-local usePayout = GetConvar("DriftC_usePayout", "false") -- wether or not to pay out drifts.
-local useFramework = GetConvar("DriftC_useFramework", "Native") -- either 'ES' or 'Native', anyone who reads this, please add VRP support since i cannot be bothered working with that sad excuse of an API.
+ESX = nil
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+local UseGlobalScore = GetConvar("DriftC_useGlobalScore", "false") -- Allow user to have the same score as the one they had on another server
+local usePayout = GetConvar("DriftC_usePayout", "true") -- wether or not to pay out drifts.
+local useFramework = GetConvar("DriftC_useFramework", "ES") -- either 'ES' or 'Native', anyone who reads this, please add VRP support since i cannot be bothered working with that sad excuse of an API.
 
 local SaveAtEndOfDrift = GetConvar("DriftC_SaveAtEndOfDrift", "true") -- Set to false if you only want to save every `x` ms
 local SaveTime = GetConvar("DriftC_SaveTime", 60000) -- How often you want to save if SaveAtEndOfDrift is false (In ms!)
@@ -14,8 +17,9 @@ Citizen.CreateThread(function()
 	AddEventHandler('driftcounter:payDrift', function(money)
 		if usePayout and useFramework == "ES" then
 			TriggerEvent('es:getPlayerFromId', source, function(ourUser) 
+				local xPlayer = ESX.GetPlayerFromId(source)
 				if ourUser then
-					ourUser.addMoney(money)
+					xPlayer.addAccountMoney('black_money', money)
 				end
 			end)
 		elseif usePayout and useFramework == "Native" then
@@ -97,19 +101,19 @@ end)
 
 -- version check code, don't change this thanks
 
-updatePath = "/Bluethefurry/FiveM-DriftCounter"
-resourceName = "Drift Counter ("..GetCurrentResourceName()..")"
-function checkVersion(err,responseText, headers)
-	curVersion = LoadResourceFile(GetCurrentResourceName(), "version")
+--updatePath = "/Bluethefurry/FiveM-DriftCounter"
+--resourceName = "Drift Counter ("..GetCurrentResourceName()..")"
+--function checkVersion(err,responseText, headers)
+--	curVersion = LoadResourceFile(GetCurrentResourceName(), "version")
+--
+--	if curVersion ~= responseText and tonumber(curVersion) < tonumber(responseText) then
+--		print("\n###############################")
+--		print("\n"..resourceName.." is outdated, should be:\n"..responseText.."\nis:\n"..curVersion.."\nplease update it from https://github.com"..updatePath.."")
+--		print("\n###############################")end
+--	SetTimeout(3600000, checkVersionHTTPRequest)	
+--end
 
-	if curVersion ~= responseText and tonumber(curVersion) < tonumber(responseText) then
-		print("\n###############################")
-		print("\n"..resourceName.." is outdated, should be:\n"..responseText.."\nis:\n"..curVersion.."\nplease update it from https://github.com"..updatePath.."")
-		print("\n###############################")end
-	SetTimeout(3600000, checkVersionHTTPRequest)	
-end
-
-function checkVersionHTTPRequest()
-	PerformHttpRequest("https://raw.githubusercontent.com"..updatePath.."/master/version", checkVersion, "GET")
-end
-checkVersionHTTPRequest()
+--function checkVersionHTTPRequest()
+--	PerformHttpRequest("https://raw.githubusercontent.com"..updatePath.."/master/version", checkVersion, "GET")
+--end
+--checkVersionHTTPRequest()
