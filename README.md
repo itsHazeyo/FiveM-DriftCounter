@@ -1,2 +1,5 @@
 # FiveM-DriftCounter
-## Need Help or want to follow my releases? Join the Support Discord: https://discord.gg/UbsYrKx
+
+Forked from Blumlaut
+
+I wanted to add Dirty money instead of clean so I spent time trying to figure it out, you will need es_extended as well
